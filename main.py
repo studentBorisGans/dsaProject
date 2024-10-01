@@ -1,3 +1,13 @@
+# To do: 
+    # - add fields to tweak parameters
+    # - add money counter
+    # - add multipliers
+    # - present data on screen
+    # - make it look good
+    # - finish game loop -> if you hit a bomb get a message and then prompted to play again
+    # - store user data
+    # - probably room for more efficient coding
+
 import pygame
 import pygame_gui
 
@@ -22,10 +32,11 @@ passedSquares = [] #where we input the x,y tuple of green squares
 # size is temp for now it should become dynamic; idea is that the control bar (left side) is about half the width and height of the main box
 # IMPORTANT: width needs to be multiple of squareSize for coords to work
 
-# info = pygame.display.Info()
-# width = info.current_w
-# height = info.current_h #instead of doing pygame.FULLSCREEN
-# print(f"Width: {width}, Height: {height}")
+#instead of doing pygame.FULLSCREEN:
+    # info = pygame.display.Info()
+    # width = info.current_w
+    # height = info.current_h 
+    # print(f"Width: {width}, Height: {height}")
 
 screen = pygame.display.set_mode(size)
 # add pygame.FULLSCREEN ^                                 
@@ -103,19 +114,15 @@ while run:
             if updateSquare(click):
                 freeze = True
             
-
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 print("Quitting...")
                 run = False
-
         manager.process_events(event)
-    
     manager.update(time)
 
     if not freeze:
         manager.draw_ui(screen)
-
         pygame.display.flip()
 
 
