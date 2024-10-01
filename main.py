@@ -13,7 +13,8 @@ bombs = [[False]*5]*5
 bombs[0][1] = True
 
 
-# size is temp for now it should become dynamic; idea is that the control bar (left side) is half the width and height of the main box
+# size is temp for now it should become dynamic; idea is that the control bar (left side) is about half the width and height of the main box
+# IMPORTANT: width needs to be multiple of squareSize for coords to work
 
 # info = pygame.display.Info()
 # width = info.current_w
@@ -24,7 +25,7 @@ screen = pygame.display.set_mode(size)
 # add pygame.FULLSCREEN ^                                 
 background = pygame.Surface(size)
 background.fill(pygame.Color('#FFFFFF'))
-manager = pygame_gui.UIManager(size)
+manager = pygame_gui.UIManager(size) #not sure purpose of manager but this guy uses it for gui
 
 
 # def initializeBombs():
@@ -48,17 +49,13 @@ def updateSquare(click):
 
     if bombs[click[0]] [click[1]]:
         pygame.draw.rect(screen, "red", [200 + squareX + borderSize, squareY + borderSize, squareSize -2 * borderSize, squareSize - 2 * borderSize])
-        pygame.display.flip()
+        pygame.display.flip() # color change not working
 
         print(" Bomb hit")
     else:
         pygame.draw.rect(screen, "green", [200 + squareX + borderSize, squareY + borderSize, squareSize -2 * borderSize, squareSize - 2 * borderSize])
-        pygame.display.flip()
+        pygame.display.flip() # color change not working
         print(" No bomb")
-
-
-
-
 
 
 
