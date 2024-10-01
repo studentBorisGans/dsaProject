@@ -8,9 +8,15 @@ pygame.display.set_caption("Mines")
 size = (700, 500)
 numSquares = 25
 squareSize = 100
+squareColor = "gold"
 borderSize = 2
-bombs = [[False]*5]*5
+bombs = [[False for _ in range(5)] for _ in range(5)]
 bombs[0][1] = True
+freeze = False
+
+passedSquares = [] #where we input the x,y tuple of green squares
+
+
 
 
 # size is temp for now it should become dynamic; idea is that the control bar (left side) is about half the width and height of the main box
@@ -43,56 +49,74 @@ def drawBoard():
         pygame.draw.rect(screen, "black", [200 +  squareX, squareY, squareSize, squareSize])
         pygame.draw.rect(screen, "gold", [200 + squareX + borderSize, squareY + borderSize, squareSize - 2 * borderSize, squareSize - 2 * borderSize])
 
-def updateSquare(click):
+def updateSquare(click) -> bool:
+    drawBoard()
+
     squareX = click[0] * squareSize
     squareY = click[1] * squareSize
 
     if bombs[click[0]] [click[1]]:
         pygame.draw.rect(screen, "red", [200 + squareX + borderSize, squareY + borderSize, squareSize -2 * borderSize, squareSize - 2 * borderSize])
         pygame.display.flip() # color change not working
+        freeze = True
 
         print(" Bomb hit")
     else:
-        pygame.draw.rect(screen, "green", [200 + squareX + borderSize, squareY + borderSize, squareSize -2 * borderSize, squareSize - 2 * borderSize])
+        # pygame.draw.rect(screen, "green", [200 + squareX + borderSize, squareY + borderSize, squareSize -2 * borderSize, squareSize - 2 * borderSize])
+        # pygame.display.flip() # color change not working
+        freeze = False
+        passedSquares.append(click)
+
+        print(passedSquares)
+
+    for safeSquare in passedSquares:
+        safeSquareX = safeSquare[0] * squareSize
+        safeSquareY = safeSquare[1] * squareSize
+
+        pygame.draw.rect(screen, "green", [200 + safeSquareX + borderSize, safeSquareY + borderSize, squareSize -2 * borderSize, squareSize - 2 * borderSize])
         pygame.display.flip() # color change not working
-        print(" No bomb")
+
+    
+    return freeze
 
 
 
 clock = pygame.time.Clock()
 run = True
 
+screen.blit(background, (0, 0))
+drawBoard()
+
 while run:
     time = clock.tick(60) / 1000 #60 fps and time is the number of milliseconds spent per instance of while loop
-
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             print("\nQuitting...")
             run = False
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and event.pos[0]//100 > 1 and not freeze:
+            print(f"Debug: {event.pos[0]//100}")
             x = (200 + event.pos[0]) // 100 - 4
             y = event.pos[1] // 100
             click = (x, y)
             print(f"X: {click[0]}, Y: {click[1]}")
-            updateSquare(click)
+            if updateSquare(click):
+                freeze = True
             
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_q:
                 print("Quitting...")
                 run = False
-            if event.key == pygame.K_SPACE:
-                print("Space!!")
+
         manager.process_events(event)
     
     manager.update(time)
 
-    screen.blit(background, (0, 0))
-    manager.draw_ui(screen)
+    if not freeze:
+        manager.draw_ui(screen)
 
-    drawBoard()
-    pygame.display.flip()
+        pygame.display.flip()
 
 
     
