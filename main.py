@@ -5,10 +5,12 @@ pygame.init()
 pygame.display.set_caption("Mines")
 
 # CONSTANTS
-size = (750, 500)
+size = (700, 500)
 numSquares = 25
 squareSize = 100
 borderSize = 2
+bombs = [[False]*5]*5
+bombs[0][1] = True
 
 
 # size is temp for now it should become dynamic; idea is that the control bar (left side) is half the width and height of the main box
@@ -25,6 +27,9 @@ background.fill(pygame.Color('#FFFFFF'))
 manager = pygame_gui.UIManager(size)
 
 
+# def initializeBombs():
+
+
 def drawBoard():
     # pygame.draw.rect(screen, )
     for i in range(numSquares):
@@ -34,9 +39,23 @@ def drawBoard():
         squareX = column*squareSize
         squareY = row * squareSize
 
-        pygame.draw.rect(screen, "black", [250 +  squareX, squareY, squareSize, squareSize])
-        pygame.draw.rect(screen, "gold", [250 + squareX + borderSize, squareY + borderSize, squareSize - 2 * borderSize, squareSize - 2 * borderSize])
-        print(f"Row: {row}, Column: {column} I: {i}")
+        pygame.draw.rect(screen, "black", [200 +  squareX, squareY, squareSize, squareSize])
+        pygame.draw.rect(screen, "gold", [200 + squareX + borderSize, squareY + borderSize, squareSize - 2 * borderSize, squareSize - 2 * borderSize])
+
+def updateSquare(click):
+    squareX = click[0] * squareSize
+    squareY = click[1] * squareSize
+
+    if bombs[click[0]] [click[1]]:
+        pygame.draw.rect(screen, "red", [200 + squareX + borderSize, squareY + borderSize, squareSize -2 * borderSize, squareSize - 2 * borderSize])
+        pygame.display.flip()
+
+        print(" Bomb hit")
+    else:
+        pygame.draw.rect(screen, "green", [200 + squareX + borderSize, squareY + borderSize, squareSize -2 * borderSize, squareSize - 2 * borderSize])
+        pygame.display.flip()
+        print(" No bomb")
+
 
 
 
@@ -55,9 +74,11 @@ while run:
             print("\nQuitting...")
             run = False
         if event.type == pygame.MOUSEBUTTONDOWN:
-            x = event.pos[0] // 100
+            x = (200 + event.pos[0]) // 100 - 4
             y = event.pos[1] // 100
             click = (x, y)
+            print(f"X: {click[0]}, Y: {click[1]}")
+            updateSquare(click)
             
 
         if event.type == pygame.KEYDOWN:
